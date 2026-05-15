@@ -59,8 +59,12 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
     }
 
     const allParticipants = [
-        ...(localParticipant ? [{ ...localParticipant, isLocal: true }] : []),
-        ...participants.map((p) => ({ ...p, isLocal: false })),
+        ...(localParticipant ? [{ ...localParticipant, isLocal: true, isScreenShare: false }] : []),
+        ...participants.map((p) => ({
+            ...p,
+            isLocal: false,
+            isScreenShare: p.id.endsWith("-screen"),
+        })),
     ];
 
     return (
@@ -70,6 +74,7 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
                     <ParticipantCard
                         key={p.id}
                         isLocal={p.isLocal}
+                        isScreenShare={p.isScreenShare}
                         participant={p}
                     />
                 ))}
