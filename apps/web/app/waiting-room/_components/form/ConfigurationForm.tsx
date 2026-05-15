@@ -7,11 +7,13 @@ import { CheckCircle, Settings } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import SpinnerLoader from "@/components/ui/SpinnerLoader"
-import { useEffect, useTransition } from "react"
+import { useTransition } from "react"
 import { ConfigurationFormSchema, ConfigurationFormType } from "../../schema"
 import FormFieldInput from "@/components/forms/FormFieldInput"
 import SelectedVideoSource from "./SelectedVideoSource"
 import SelectedAudioSource from "./SelectedAudioSource"
+import { saveUserPreference } from "@/store/userPreferenceStore"
+import useRouterNavigation from "@/hooks/useRefreshRouter"
 
 interface ConfigurationFormProps {
     defaultValues: Partial<ConfigurationFormType>;
@@ -20,6 +22,7 @@ interface ConfigurationFormProps {
 const ConfigurationForm = ({ defaultValues }: ConfigurationFormProps) => {
 
     const [isPending, startTransition] = useTransition();
+    const { router, params } = useRouterNavigation();
 
     const form = useForm<ConfigurationFormType>({
         resolver: zodResolver(ConfigurationFormSchema),
@@ -35,7 +38,22 @@ const ConfigurationForm = ({ defaultValues }: ConfigurationFormProps) => {
     const submit = (data: ConfigurationFormType) => {
         startTransition(async () => {
             try {
-                console.log(data);
+
+                saveUserPreference({
+                    displayName: data.displayName,
+                    devices: {
+                        video: {
+                            deviceId: data.videoSource,
+
+                        },
+                        audio: {
+                            deviceId: data.audioSource,
+
+                        },
+                    },
+                })
+
+                router.push(`/room/${params.id}`);
             } catch (error) {
                 console.error(error);
             }

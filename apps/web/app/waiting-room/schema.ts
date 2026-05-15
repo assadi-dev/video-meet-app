@@ -9,6 +9,7 @@ export const ConfigurationFormSchema = z.object({
     displayName: z.string().min(1),
     videoSource: z.string().nullable(),
     audioSource: z.string().nullable(),
+
 });
 
 export type deviceSchemaType = z.infer<typeof deviceSchema>;

@@ -1,5 +1,6 @@
 "use client"
 
+import { usePreferenceStore } from "@/store/userPreferenceStore";
 import useSettingMediaDevice from "../_hooks/useSettingDevice";
 import { ConfigurationFormType } from "../schema";
 import ConfigurationForm from "./form/ConfigurationForm";
@@ -13,6 +14,9 @@ type WaitingRoomPageProps = {
 const WaitingPageClient = ({ roomId }: WaitingRoomPageProps) => {
 
     const { video, audio, enableMediaStream } = useSettingMediaDevice();
+    const displayName = usePreferenceStore.use.displayName();
+
+
     const handleClickCamera = (checked: boolean) => {
         enableMediaStream("video", checked);
     };
@@ -21,7 +25,7 @@ const WaitingPageClient = ({ roomId }: WaitingRoomPageProps) => {
     };
 
     const defaultValues = {
-        displayName: "",
+        displayName: displayName || "",
         videoSource: video.id,
         audioSource: audio.id,
     } satisfies ConfigurationFormType;

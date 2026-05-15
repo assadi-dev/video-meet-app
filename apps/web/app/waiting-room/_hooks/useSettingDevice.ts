@@ -2,6 +2,7 @@
 
 import { useEffect, useReducer, useRef } from "react";
 import { DEVICE_STATE_EVENT, DeviceStateEvent, DeviceStateEventPayload, DeviceStateReducer } from "../type";
+import { saveUserDevicePreference } from "@/store/userPreferenceStore";
 
 
 type DeviceStateAction = "SET_VIDEO" | "SET_AUDIO" | "ENABLE_MEDIA_STREAM" | "SELECT_DEVICE" | "INIT_DEVICES";
@@ -87,6 +88,7 @@ const useSettingMediaDevice = () => {
 
         const onSelectDevice = (event: CustomEvent<DeviceStateEventPayload>) => {
             selectDevice(event.detail.deviceId, event.detail.kind);
+
         };
 
 
@@ -111,13 +113,19 @@ const useSettingMediaDevice = () => {
                 stream?.getVideoTracks().forEach((track) => {
                     track.enabled = enabled;
                 });
-                dispatch({ type: "SET_VIDEO", payload: { video: { ...state.video, enabled, stream } } });
+                dispatch({ type: "SET_VIDEO", payload: { video: { enabled, stream } } });
+                saveUserDevicePreference("video", {
+                    enabled,
+                })
                 break;
             case "audio":
                 stream?.getAudioTracks().forEach((track) => {
                     track.enabled = enabled;
                 });
-                dispatch({ type: "SET_AUDIO", payload: { audio: { ...state.audio, enabled, stream } } });
+                dispatch({ type: "SET_AUDIO", payload: { audio: { enabled, stream } } });
+                saveUserDevicePreference("audio", {
+                    enabled,
+                })
                 break;
         }
     };
