@@ -25,12 +25,12 @@ const buildParticipantStream = (participant: Participant): ParticipantStream => 
 };
 
 const buildScreenShareStream = (participant: Participant): ParticipantStream | null => {
-    const screenTrack = participant.getTrackPublication(Track.Source.ScreenShare)?.track;
-    if (!screenTrack?.mediaStreamTrack) return null;
+    const pub = participant.getTrackPublication(Track.Source.ScreenShare);
+    if (!pub || !pub.isSubscribed || !pub.track?.mediaStreamTrack) return null;
     return {
         id: `${participant.sid}-screen`,
         name: `${participant.identity} (écran)`,
-        mediaStream: new MediaStream([screenTrack.mediaStreamTrack]),
+        mediaStream: new MediaStream([pub.track.mediaStreamTrack]),
         isVideoEnabled: true,
         isAudioEnabled: false,
     };
@@ -103,6 +103,7 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
         lk.on(RoomEvent.ParticipantDisconnected, syncParticipants);
         lk.on(RoomEvent.TrackSubscribed, syncParticipants);
         lk.on(RoomEvent.TrackUnsubscribed, syncParticipants);
+        lk.on(RoomEvent.TrackUnpublished, syncParticipants);
         lk.on(RoomEvent.TrackMuted, syncParticipants);
         lk.on(RoomEvent.TrackUnmuted, syncParticipants);
         lk.on(RoomEvent.LocalTrackPublished, (pub) => {
