@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: livekit-server
+    ports:
+      - "7880:7880" # HTTP/WebSocket
+      - "7881:7881" # RTC over TCP
+      - "7882:7882/udp" # RTC over UDP
+    environment:
+      - LIVEKIT_KEYS=${LIVEKIT_KEYS}
+    command: --dev --bind 0.0.0.0
+    networks:
+      - livekit-network
+
+
+networks:
+  livekit-network:
+    driver: bridge
+
