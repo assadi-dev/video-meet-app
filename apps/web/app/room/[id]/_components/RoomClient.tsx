@@ -19,7 +19,7 @@ const RoomClient = ({ roomId }: RoomClientProps) => {
         fetchRoomToken(roomId, displayName).then(setToken).catch(console.error);
     }, [roomId, displayName]);
 
-    const { room, localParticipant, participants, isConnecting, error } = useLivekitClient({
+    const { room, localParticipant, participants, isConnecting, isScreenSharing, error } = useLivekitClient({
         roomName: roomId,
         token,
     });
@@ -30,6 +30,7 @@ const RoomClient = ({ roomId }: RoomClientProps) => {
             localParticipant={localParticipant}
             participants={participants}
             isConnecting={isConnecting}
+            isScreenSharing={isScreenSharing}
             error={error}
         />
     );

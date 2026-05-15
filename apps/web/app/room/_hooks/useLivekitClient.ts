@@ -48,6 +48,7 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
     const [participants, setParticipants] = useState<ParticipantStream[]>([]);
     const [isConnecting, setIsConnecting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const syncParticipants = () => {
@@ -104,8 +105,14 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
         lk.on(RoomEvent.TrackUnsubscribed, syncParticipants);
         lk.on(RoomEvent.TrackMuted, syncParticipants);
         lk.on(RoomEvent.TrackUnmuted, syncParticipants);
-        lk.on(RoomEvent.LocalTrackPublished, syncParticipants);
-        lk.on(RoomEvent.LocalTrackUnpublished, syncParticipants);
+        lk.on(RoomEvent.LocalTrackPublished, (pub) => {
+            if (pub.source === Track.Source.ScreenShare) setIsScreenSharing(true);
+            syncParticipants();
+        });
+        lk.on(RoomEvent.LocalTrackUnpublished, (pub) => {
+            if (pub.source === Track.Source.ScreenShare) setIsScreenSharing(false);
+            syncParticipants();
+        });
         lk.on(RoomEvent.Disconnected, () => {
             setIsConnected(false);
             setLocalParticipant(null);
@@ -126,6 +133,7 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
         participants,
         isConnecting,
         isConnected,
+        isScreenSharing,
         error,
     };
 };

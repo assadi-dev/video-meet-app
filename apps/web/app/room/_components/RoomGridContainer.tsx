@@ -13,13 +13,13 @@ interface RoomGridContainerProps {
     localParticipant: ParticipantStream | null;
     participants: ParticipantStream[];
     isConnecting: boolean;
+    isScreenSharing: boolean;
     error: string | null;
 }
 
-const RoomGridContainer = ({ room, localParticipant, participants, isConnecting, error }: RoomGridContainerProps) => {
+const RoomGridContainer = ({ room, localParticipant, participants, isConnecting, isScreenSharing, error }: RoomGridContainerProps) => {
     const [isAudioEnabled, setIsAudioEnabled] = useState(true);
     const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-    const [isScreenSharing, setIsScreenSharing] = useState(false);
     const { router } = useRouterNavigation();
 
     const handleLeaveCall = async () => {
@@ -39,7 +39,6 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
 
     const handleScreenShare = async (enabled: boolean) => {
         await room.localParticipant.setScreenShareEnabled(enabled);
-        setIsScreenSharing(enabled);
     };
 
     if (isConnecting) {
