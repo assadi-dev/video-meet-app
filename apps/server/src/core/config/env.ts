@@ -5,7 +5,9 @@ const portSchema = z.coerce.number().int().min(1).max(65535);
 const env_schema = z.object({
   HTTP_PORT: portSchema,
   WS_PORT: portSchema,
-
+  LIVEKIT_URL: z.string().url(),
+  LIVEKIT_API_KEY: z.string().min(1),
+  LIVEKIT_API_SECRET: z.string().min(1),
 });
 
 const result = env_schema.safeParse(process.env);
