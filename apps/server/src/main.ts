@@ -11,7 +11,7 @@ import "dotenv/config";
 import "./core/config/env";
 
 //Enable dependencies
-import "./injection/SignalingServer.injection";
+import "./injection/di";
 
 // Start Server
 import "./app";

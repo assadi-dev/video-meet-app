@@ -15,7 +15,7 @@ export class LiveKitService {
     async generateToken(roomName: string, participantName: string): Promise<string> {
         const token = new AccessToken(ENV.LIVEKIT_API_KEY, ENV.LIVEKIT_API_SECRET, {
             identity: participantName,
-            ttl: "10m",
+            ttl: "1 day",
         });
         token.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
         return await token.toJwt();
