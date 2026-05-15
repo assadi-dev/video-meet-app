@@ -12,7 +12,8 @@ services:
       - LIVEKIT_KEYS=${LIVEKIT_KEYS}
       - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
       - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
-    command: --keys "${LIVEKIT_KEYS}"
+      - SERVER_IP=${SERVER_IP}
+    command: --keys "${LIVEKIT_KEYS}" # --node-ip ${SERVER_IP} pour l'ip publique
     restart: unless-stopped
     networks:
       - livekit-network
