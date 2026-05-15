@@ -1,0 +1,32 @@
+"use client"
+
+import { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { ConfigurationFormType } from "../schema";
+import { useEnumerateDevices } from "./useEnumerateDevices";
+import { DEVICE_STATE_EVENT } from "../type";
+
+export const useResetDevices = (form: UseFormReturn<ConfigurationFormType>) => {
+    const { emit } = useEnumerateDevices()
+    useEffect(() => {
+        if (!form) return;
+        const resetDevices = async () => {
+            const listesDevices = await navigator.mediaDevices.enumerateDevices()
+            const newVideoDevices = listesDevices.filter((device) => device.kind === "videoinput")[0];
+            const newAudioDevices = listesDevices.filter((device) => device.kind === "audioinput")[0];
+            if (newVideoDevices) {
+                form.setValue("videoSource", newVideoDevices.deviceId);
+                emit(DEVICE_STATE_EVENT.select, newVideoDevices.deviceId, "videoinput");
+            };
+            if (newAudioDevices) {
+                form.setValue("audioSource", newAudioDevices?.deviceId)
+                emit(DEVICE_STATE_EVENT.select, newAudioDevices?.deviceId, "audioinput")
+            };
+        }
+
+        navigator.mediaDevices.addEventListener("devicechange", resetDevices);
+        return () => {
+            navigator.mediaDevices.removeEventListener("devicechange", resetDevices);
+        }
+    }, [form]);
+}

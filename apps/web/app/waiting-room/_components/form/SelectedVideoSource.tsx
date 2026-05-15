@@ -1,8 +1,9 @@
 import { useEnumerateDevices } from "@/waiting-room/_hooks/useEnumerateDevices";
+import { useResetDevices } from "@/waiting-room/_hooks/useResetDevices";
 import { ConfigurationFormType } from "@/waiting-room/schema";
 import { DEVICE_STATE_EVENT } from "@/waiting-room/type";
 import FormFieldComboBox from "@components/forms/FormFieldComboBox";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 
@@ -10,6 +11,7 @@ const SelectedVideoSource = () => {
 
   const form = useFormContext<ConfigurationFormType>()
   const { devices, emit } = useEnumerateDevices()
+  useResetDevices(form)
 
   const options = devices.filter((device) => device.kind === "videoinput").map((device) => ({
     label: device.label,
@@ -20,6 +22,10 @@ const SelectedVideoSource = () => {
     form.setValue("videoSource", value.value);
     emit(DEVICE_STATE_EVENT.select, value.value, "videoinput");
   }
+
+
+
+
   return (
     <FormFieldComboBox
       label="Source vidéo"

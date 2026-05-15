@@ -28,10 +28,22 @@ export const useEnumerateDevices = () => {
         };
     }, []);
 
+    const refreshDevices = async (callback: (value: string) => void) => {
+        const listesDevices = await navigator.mediaDevices.enumerateDevices()
+        const newVideoDevices = listesDevices.filter((device) => device.kind === "videoinput")[0];
+        const newAudioDevices = listesDevices.filter((device) => device.kind === "audioinput")[0];
+        if (newVideoDevices) {
+            callback(newVideoDevices?.deviceId)
+        };
+        if (newAudioDevices) {
+            callback(newAudioDevices?.deviceId)
+        };
+    }
+
 
     const emit = (event: DeviceStateEvent, deviceId: string, kind: DeviceStateEventPayload["kind"]) => {
         window.dispatchEvent(new CustomEvent(event, { detail: { deviceId, kind } }));
     }
 
-    return { devices, isLoading, error, emit };
+    return { devices, isLoading, error, emit, refreshDevices };
 }
