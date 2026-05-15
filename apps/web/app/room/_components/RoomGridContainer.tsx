@@ -39,7 +39,7 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
 
     const handleScreenShare = async (enabled: boolean) => {
         await room.localParticipant.setScreenShareEnabled(enabled);
-        setIsScreenSharing(enabled);
+        //setIsScreenSharing(enabled);
     };
 
     if (isConnecting) {
@@ -67,9 +67,9 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
     return (
         <>
             <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 h-full w-full gap-4">
-                {allParticipants.map((p, index) => (
+                {allParticipants.map((p) => (
                     <ParticipantCard
-                        key={p.id || index}
+                        key={p.id}
                         isLocal={p.isLocal}
                         participant={p}
                     />

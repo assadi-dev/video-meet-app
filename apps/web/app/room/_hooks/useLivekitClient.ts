@@ -17,7 +17,7 @@ const buildParticipantStream = (participant: Participant): ParticipantStream => 
 
     return {
         id: participant.sid,
-        name: participant.name ?? participant.identity,
+        name: participant.identity,
         mediaStream: stream.getTracks().length > 0 ? stream : null,
         isVideoEnabled: participant.isCameraEnabled,
         isAudioEnabled: participant.isMicrophoneEnabled,
