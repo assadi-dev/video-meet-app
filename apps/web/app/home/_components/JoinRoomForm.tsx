@@ -13,9 +13,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { JoinRoomFormType, JoinRoomSchema } from "../schema";
+import { useNavigateRoom } from "@hooks/useNavigateRoom";
 
 
 const JoinRoomForm = () => {
+  const { navigateToPrepareRoom } = useNavigateRoom();
 
 
   const form = useForm<JoinRoomFormType>({
@@ -28,7 +30,7 @@ const JoinRoomForm = () => {
   const isValid = form.formState.errors.roomId?.message ? false : true;
   const handleJoinRoom: SubmitHandler<JoinRoomFormType> = async (values) => {
     try {
-      console.log(values.roomId);
+      navigateToPrepareRoom(values.roomId);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);

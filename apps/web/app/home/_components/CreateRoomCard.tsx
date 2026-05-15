@@ -8,8 +8,10 @@ import {
 } from "@components/ui/card";
 import { Calendar } from "lucide-react";
 import { Button } from "@ui/button";
+import { useNavigateRoom } from "@hooks/useNavigateRoom";
 
 const CreateRoomCard = () => {
+  const { createRoom } = useNavigateRoom();
 
 
   return (
@@ -25,7 +27,7 @@ const CreateRoomCard = () => {
       </CardHeader>
       <CardContent>
         <Button
-
+          onClick={createRoom}
           className="w-full bg-gradient-accent hover:opacity-90"
         >
           Nouvelle réunion
