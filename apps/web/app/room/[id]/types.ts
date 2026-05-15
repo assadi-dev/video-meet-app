@@ -7,3 +7,11 @@ export type RoomDevice = {
     track: MediaStreamTrack | null
     enabled: boolean
 }
+
+export type ParticipantStream = {
+    id: string;
+    name: string;
+    mediaStream: MediaStream | null;
+    isAudioEnabled: boolean;
+    isVideoEnabled: boolean;
+}
