@@ -81,10 +81,10 @@ const FormFieldComboBox = <T extends FieldValues>({
                     classNameButton
                   )}
                 >
-                  {field.value && options
+                  <p className="text-xs truncate">    {field.value && options
                     ? options.find((option) => option.value === field.value)
-                        ?.label
-                    : placeholder}
+                      ?.label
+                    : placeholder}</p>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </FormControl>

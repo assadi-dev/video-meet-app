@@ -34,10 +34,7 @@ const useSettingMediaDevice = () => {
 
 
 
-            const payload: DeviceStateReducer = {
-                video: { enabled: false, stream: null, id: null },
-                audio: { enabled: false, stream: null, id: null }
-            };
+            const payload: DeviceStateReducer = structuredClone(state);
             try {
                 userMediaStream.current = await navigator.mediaDevices.getUserMedia({
                     video: true,

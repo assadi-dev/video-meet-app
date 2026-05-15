@@ -4,16 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Video } from "lucide-react"
 import PreviewStream from "./PreviewStream"
 import { EnableCameraButton, EnableMicButton } from "./EnableDeviceButton"
-import useSettingMediaDevice from "../_hooks/useSettingDevice"
 
-const PreviewDevices = () => {
-    const { video, audio, enableMediaStream } = useSettingMediaDevice();
-    const handleClickCamera = (checked: boolean) => {
-        enableMediaStream("video", checked);
+interface PreviewDevicesProps {
+    video: {
+        enabled: boolean;
+        stream: MediaStream | null;
     };
-    const handleClickMic = (checked: boolean) => {
-        enableMediaStream("audio", checked);
+    audio: {
+        enabled: boolean;
+        stream: MediaStream | null;
     };
+    handleClickCamera: (checked: boolean) => void;
+    handleClickMic: (checked: boolean) => void;
+}
+const PreviewDevices = ({ video, audio, handleClickCamera, handleClickMic }: PreviewDevicesProps) => {
+
     return (
         <Card>
             <CardHeader>
