@@ -54,8 +54,8 @@ const useSettingMediaDevice = () => {
         const initDevice = async () => {
             try {
                 userMediaStream.current = await navigator.mediaDevices.getUserMedia({
-                    video: userDevicePreference.video?.enabled ?? true,
-                    audio: userDevicePreference.audio?.enabled ?? true,
+                    video: true,
+                    audio: true,
                 });
 
                 const userDevices = await navigator.mediaDevices.enumerateDevices();
