@@ -1,23 +1,38 @@
 "use client";
 
-import { usePreferenceStore } from "@/store/userPreferenceStore";
 import { useEffect, useState } from "react";
-import { RoomDevice } from "../types";
-import { useDevicesStore } from "@/store/useDevicesStore";
+import { usePreferenceStore } from "@/store/userPreferenceStore";
 import RoomGridContainer from "@/room/_components/RoomGridContainer";
-import useInitLocalMedia from "@/room/_hooks/useInitLocalMedia";
-
-
+import useLivekitClient from "@/room/_hooks/useLivekitClient";
+import { fetchRoomToken } from "@/lib/api";
 
 interface RoomClientProps {
     roomId: string;
 }
 
 const RoomClient = ({ roomId }: RoomClientProps) => {
+    const displayName = usePreferenceStore.use.displayName();
+    const [token, setToken] = useState<string | null>(null);
 
-    const { devices, displayName } = useInitLocalMedia();
+    useEffect(() => {
+        if (!displayName) return;
+        fetchRoomToken(roomId, displayName).then(setToken).catch(console.error);
+    }, [roomId, displayName]);
 
-    return <RoomGridContainer />
+    const { room, localParticipant, participants, isConnecting, error } = useLivekitClient({
+        roomName: roomId,
+        token,
+    });
+
+    return (
+        <RoomGridContainer
+            room={room}
+            localParticipant={localParticipant}
+            participants={participants}
+            isConnecting={isConnecting}
+            error={error}
+        />
+    );
 };
 
 export default RoomClient;

@@ -10,7 +10,10 @@ services:
       - "7882:7882/udp" # RTC over UDP
     environment:
       - LIVEKIT_KEYS=${LIVEKIT_KEYS}
-    command: --dev --bind 0.0.0.0
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+    command: --keys "${LIVEKIT_KEYS}"
+    restart: unless-stopped
     networks:
       - livekit-network
 
