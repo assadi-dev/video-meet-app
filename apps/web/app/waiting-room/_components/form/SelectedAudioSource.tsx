@@ -14,7 +14,7 @@ const SelectedAudioSource = () => {
     label: device.label,
     value: device.deviceId,
   }));
-  console.log(form.getValues());
+
   const onSelected = (value: Record<string, any>) => {
 
     form.setValue("audioSource", value.value);

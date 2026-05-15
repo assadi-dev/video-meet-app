@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { DeviceStateEvent, DeviceStateEventPayload } from "../type";
 
 export const useEnumerateDevices = () => {
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -11,7 +12,7 @@ export const useEnumerateDevices = () => {
         const enumerateDevices = async () => {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
-                setDevices((prev) => [...prev, ...devices]);
+                setDevices(devices);
             } catch (error) {
                 setError(error as Error);
             } finally {
@@ -19,7 +20,18 @@ export const useEnumerateDevices = () => {
             }
         };
         enumerateDevices();
+
+        navigator.mediaDevices.addEventListener('devicechange', enumerateDevices);
+
+        return () => {
+            navigator.mediaDevices.removeEventListener("devicechange", enumerateDevices);
+        };
     }, []);
 
-    return { devices, isLoading, error };
+
+    const emit = (event: DeviceStateEvent, deviceId: string, kind: DeviceStateEventPayload["kind"]) => {
+        window.dispatchEvent(new CustomEvent(event, { detail: { deviceId, kind } }));
+    }
+
+    return { devices, isLoading, error, emit };
 }

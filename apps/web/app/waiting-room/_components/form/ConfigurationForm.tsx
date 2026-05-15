@@ -80,10 +80,7 @@ const ConfigurationForm = ({ defaultValues }: ConfigurationFormProps) => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
-                            <SelectedVideoSource
-
-
-                            />
+                            <SelectedVideoSource />
                         </div>
 
                         <div>

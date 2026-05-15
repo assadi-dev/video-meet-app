@@ -26,7 +26,6 @@ const WaitingPageClient = ({ roomId }: WaitingRoomPageProps) => {
         audioSource: audio.id,
     } satisfies ConfigurationFormType;
 
-    console.log(video.id, audio.id);
     return (
         <main className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
