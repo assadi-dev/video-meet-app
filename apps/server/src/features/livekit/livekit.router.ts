@@ -2,15 +2,18 @@ import { Router } from "express";
 import { container } from "tsyringe";
 import { TOKENS } from "../../injection/tokens";
 import { LiveKitService } from "./LiveKitService";
+import { LivekkiteRoomDecoder } from "./dto/schema";
+import { HTTPBadRequestException } from "@core/exception";
 
 const livekitRouter = Router();
 
 livekitRouter.post("/rooms/token", async (req, res, next) => {
     try {
-        const { roomName, participantName } = req.body;
-        if (!roomName || !participantName) {
-            return res.status(400).json({ message: "roomName and participantName are required" });
+        const result = LivekkiteRoomDecoder.createToken(req.body);
+        if (!result.success) {
+            throw new HTTPBadRequestException("roomName and participantName are required");
         }
+        const { roomName, participantName } = result.data;
         const livekitService = container.resolve<LiveKitService>(TOKENS.liveKitService);
         const token = await livekitService.generateToken(roomName, participantName);
         return res.json({ token });
@@ -31,8 +34,11 @@ livekitRouter.get("/rooms", async (_req, res, next) => {
 
 livekitRouter.post("/rooms", async (req, res, next) => {
     try {
-        const { name } = req.body;
-        if (!name) return res.status(400).json({ message: "name is required" });
+        const result = LivekkiteRoomDecoder.createRoom(req.body);
+        if (!result.success) {
+            throw new HTTPBadRequestException("name is required");
+        }
+        const { name } = result.data;
         const livekitService = container.resolve<LiveKitService>(TOKENS.liveKitService);
         const room = await livekitService.createRoom(name);
         return res.status(201).json(room);
