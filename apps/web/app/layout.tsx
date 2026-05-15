@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={cn("font-sans", geist.variable)}>
+    <html lang="fr" className={cn("font-sans", geist.variable)} suppressHydrationWarning>
       <body className={`min-h-screen overflow-x-hidden ${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider
           attribute="class"
