@@ -2,8 +2,15 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "nodenext",
-    "types": ["node", "express", "jest"],
-    "lib": ["es2022", "dom"],
+    "types": [
+      "node",
+      "express",
+      "jest"
+    ],
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "outDir": "build",
     "baseUrl": "./",
     "allowJs": true,
@@ -23,14 +30,23 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-      "paths":{
-        "@bin/*":["bin/*"],
-        "@config/*":["src/core/config/*"],
-        "@controller/*":["src/controller/*"],
-        "@services/*":["src/services/*"],
-        "@core/*":["src/core/*"],
-        "@middleware/*":["src/middleware/*"]
-      }
+    "paths": {
+      "@bin/*": [
+        "bin/*"
+      ],
+      "@config/*": [
+        "src/core/config/*"
+      ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@middleware/*": [
+        "src/middleware/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",
@@ -38,5 +54,10 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*", "config/**/*", "bin/**/*", "public/**/*"]
+  "include": [
+    "src/**/*",
+    "config/**/*",
+    "bin/**/*",
+    "public/**/*"
+  ]
 }
