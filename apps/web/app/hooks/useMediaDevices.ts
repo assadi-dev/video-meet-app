@@ -1,4 +1,4 @@
-import { usePreferenceStore } from "@/store/preferenceStore";
+
 import React from "react";
 
 export type MediaDevice = {
@@ -82,8 +82,7 @@ const useMediaDevices = () => {
   });
   let selectedVideoDevice: MediaDevice | null = null;
   let selectedAudioDevice: MediaDevice | null = null;
-  const userDeviceVideo = usePreferenceStore.use.devices().video;
-  const userDeviceAudio = usePreferenceStore.use.devices().audio;
+
 
   const enableMediaStream = (kind: "audio" | "video", enabled: boolean) => {
     const stream = state.mediaStream as MediaStream;

@@ -1,9 +1,21 @@
+import TemplatePage from "@/components/templates/TemplatePage";
+import WaitingPageClient from "../_components/WaitingPageClient";
 
-export default async function WaitingRoomPage({ params }: { params: { id: string } }) {
+export const generateMetadata = async () => {
+
+    return {
+        title: `Préparer l'appel`,
+    };
+}
+export const WaitingRoomPage = async ({ params }: { params: { id: string } }) => {
     const { id } = await params;
     return (
-        <div>
-            <h1>Waiting Room {id}</h1>
-        </div>
+        <TemplatePage
+            back
+        >
+            <WaitingPageClient roomId={id} />
+        </TemplatePage>
     );
 }
+
+export default WaitingRoomPage;
