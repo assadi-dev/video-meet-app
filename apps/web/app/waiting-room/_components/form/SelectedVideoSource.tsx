@@ -3,7 +3,6 @@ import { useResetDevices } from "@/waiting-room/_hooks/useResetDevices";
 import { ConfigurationFormType } from "@/waiting-room/schema";
 import { DEVICE_STATE_EVENT } from "@/waiting-room/type";
 import FormFieldComboBox from "@components/forms/FormFieldComboBox";
-import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 
