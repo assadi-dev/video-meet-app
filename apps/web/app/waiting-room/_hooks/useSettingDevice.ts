@@ -20,36 +20,31 @@ const useSettingMediaDevice = () => {
 
     useEffect(() => {
         const initDevice = async () => {
-
-            const userDevices = await navigator.mediaDevices.enumerateDevices();
-            userDevices.forEach((device) => {
-                if (device.kind === "videoinput") {
-                    userDevicesVideo.current.push(device);
-                }
-                if (device.kind === "audioinput") {
-                    userDevicesAudio.current.push(device);
-                }
-            });
-
-
-
-
-            const payload: DeviceStateReducer = structuredClone(state);
             try {
                 userMediaStream.current = await navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true,
                 });
 
+                const userDevices = await navigator.mediaDevices.enumerateDevices();
+                userDevices.forEach((device) => {
+                    if (device.kind === "videoinput") {
+                        userDevicesVideo.current.push(device);
+                    }
+                    if (device.kind === "audioinput") {
+                        userDevicesAudio.current.push(device);
+                    }
+                });
+
+                const payload: DeviceStateReducer = { ...state };
                 userMediaStream.current.getTracks().forEach((track) => {
                     const stream = userMediaStream.current;
                     if (track.kind === "video") {
-                        const device = userDevicesVideo.current.find((device) => device.label === track.label);
+                        const device = userDevicesVideo.current.find((d) => d.label === track.label);
                         payload.video = { enabled: track.enabled, stream, id: device?.deviceId || null };
-
                     }
                     if (track.kind === "audio") {
-                        const device = userDevicesAudio.current.find((device) => device.label === track.label);
+                        const device = userDevicesAudio.current.find((d) => d.label === track.label);
                         payload.audio = { enabled: track.enabled, stream, id: device?.deviceId || null };
                     }
                 });
