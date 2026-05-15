@@ -1,4 +1,6 @@
 import TemplatePage from "@/components/templates/TemplatePage";
+import TemplateRoomPage from "@/components/templates/TemplateRoomPage";
+import RoomClient from "./_components/RoomClient";
 
 
 export const generateMetadata = async () => {
@@ -17,11 +19,13 @@ export const RoomPage = async ({ params }: { params: Promise<RoomPageProps> }) =
     const { id } = await params;
 
     return (
-        <TemplatePage
-            back
+        <TemplateRoomPage
+            username=""
+            roomId={id}
+            roomTitle=""
         >
-            <p>Room {id}</p>
-        </TemplatePage>
+            <RoomClient roomId={id} />
+        </TemplateRoomPage>
     )
 }
 

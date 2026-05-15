@@ -22,4 +22,5 @@ export type DeviceStateEvent = typeof DEVICE_STATE_EVENT[keyof typeof DEVICE_STA
 export type DeviceStateEventPayload = {
     deviceId: string;
     kind: "videoinput" | "audioinput";
+    enabled: boolean;
 }

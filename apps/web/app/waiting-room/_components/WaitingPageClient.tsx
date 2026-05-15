@@ -5,6 +5,8 @@ import useSettingMediaDevice from "../_hooks/useSettingDevice";
 import { ConfigurationFormType } from "../schema";
 import ConfigurationForm from "./form/ConfigurationForm";
 import PreviewDevices from "./PreviewDevices";
+import { DEVICE_STATE_EVENT } from "../type";
+import { useDevicesStore } from "@/store/useDevicesStore";
 
 
 
@@ -13,22 +15,28 @@ type WaitingRoomPageProps = {
 };
 const WaitingPageClient = ({ roomId }: WaitingRoomPageProps) => {
 
-    const { video, audio, enableMediaStream } = useSettingMediaDevice();
-    const displayName = usePreferenceStore.use.displayName();
+    const { video, audio, enableMediaStream, emit } = useSettingMediaDevice();
+    const displayName = usePreferenceStore((state) => state.displayName);
+
 
 
     const handleClickCamera = (checked: boolean) => {
         enableMediaStream("video", checked);
+        emit(DEVICE_STATE_EVENT.toggle, video.id!, "videoinput", checked);
     };
     const handleClickMic = (checked: boolean) => {
         enableMediaStream("audio", checked);
+        emit(DEVICE_STATE_EVENT.toggle, audio.id!, "audioinput", checked);
     };
 
     const defaultValues = {
         displayName: displayName || "",
         videoSource: video.id,
+        videoEnabled: video.enabled,
         audioSource: audio.id,
+        audioEnabled: audio.enabled,
     } satisfies ConfigurationFormType;
+
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -43,7 +51,7 @@ const WaitingPageClient = ({ roomId }: WaitingRoomPageProps) => {
                     />
 
                     {/* Configuration */}
-                    {video.id && audio.id && <ConfigurationForm defaultValues={defaultValues} />}
+                    <ConfigurationForm defaultValues={defaultValues} />
                 </div>
             </div>
         </main>

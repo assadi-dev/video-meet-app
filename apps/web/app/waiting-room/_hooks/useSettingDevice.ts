@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useRef } from "react";
 import { DEVICE_STATE_EVENT, DeviceStateEvent, DeviceStateEventPayload, DeviceStateReducer } from "../type";
-import { saveUserDevicePreference } from "@/store/userPreferenceStore";
+import { useDevicesStore } from "@/store/useDevicesStore";
 
 
 type DeviceStateAction = "SET_VIDEO" | "SET_AUDIO" | "ENABLE_MEDIA_STREAM" | "SELECT_DEVICE" | "INIT_DEVICES";
@@ -41,6 +41,9 @@ const useSettingMediaDevice = () => {
     const userDevicesVideo = useRef<MediaDeviceInfo[]>([]);
     const userDevicesAudio = useRef<MediaDeviceInfo[]>([]);
     const userMediaStream = useRef<MediaStream | null>(null);
+
+    const userDevicePreference = useDevicesStore((state) => state);
+
     const [state, dispatch] = useReducer<DeviceStateReducer, any>(deviceStateReducer, {
         video: { id: null, enabled: false, stream: null },
         audio: { id: null, enabled: false, stream: null }
@@ -51,8 +54,8 @@ const useSettingMediaDevice = () => {
         const initDevice = async () => {
             try {
                 userMediaStream.current = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true,
+                    video: userDevicePreference.video?.enabled ?? true,
+                    audio: userDevicePreference.audio?.enabled ?? true,
                 });
 
                 const userDevices = await navigator.mediaDevices.enumerateDevices();
@@ -114,18 +117,14 @@ const useSettingMediaDevice = () => {
                     track.enabled = enabled;
                 });
                 dispatch({ type: "SET_VIDEO", payload: { video: { enabled, stream } } });
-                saveUserDevicePreference("video", {
-                    enabled,
-                })
+
                 break;
             case "audio":
                 stream?.getAudioTracks().forEach((track) => {
                     track.enabled = enabled;
                 });
                 dispatch({ type: "SET_AUDIO", payload: { audio: { enabled, stream } } });
-                saveUserDevicePreference("audio", {
-                    enabled,
-                })
+
                 break;
         }
     };
@@ -159,8 +158,8 @@ const useSettingMediaDevice = () => {
         }
     }
 
-    const emit = (event: DeviceStateEvent, deviceId: string, kind: DeviceStateEventPayload["kind"]) => {
-        window.dispatchEvent(new CustomEvent(event, { detail: { deviceId, kind } }));
+    const emit = (event: DeviceStateEvent, deviceId: string, kind: DeviceStateEventPayload["kind"], enabled?: boolean) => {
+        window.dispatchEvent(new CustomEvent(event, { detail: { deviceId, kind, enabled } }));
     }
 
     return {

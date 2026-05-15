@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Form } from "@/components/ui/form"
@@ -7,13 +8,15 @@ import { CheckCircle, Settings } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import SpinnerLoader from "@/components/ui/SpinnerLoader"
-import { useTransition } from "react"
+import { useEffect, useTransition } from "react"
 import { ConfigurationFormSchema, ConfigurationFormType } from "../../schema"
 import FormFieldInput from "@/components/forms/FormFieldInput"
 import SelectedVideoSource from "./SelectedVideoSource"
 import SelectedAudioSource from "./SelectedAudioSource"
 import { saveUserPreference } from "@/store/userPreferenceStore"
 import useRouterNavigation from "@/hooks/useRefreshRouter"
+import { saveUserDevice } from "@/store/useDevicesStore"
+import { DEVICE_STATE_EVENT, DeviceStateEventPayload } from "@/waiting-room/type"
 
 interface ConfigurationFormProps {
     defaultValues: Partial<ConfigurationFormType>;
@@ -31,6 +34,23 @@ const ConfigurationForm = ({ defaultValues }: ConfigurationFormProps) => {
         },
     });
 
+    useEffect(() => {
+        form.reset(defaultValues);
+        const enableMediaStream = (event: CustomEvent<DeviceStateEventPayload>) => {
+            const { kind, enabled } = event.detail;
+            if (kind === "videoinput") {
+                form.setValue("videoEnabled", enabled);
+            }
+            if (kind === "audioinput") {
+                form.setValue("audioEnabled", enabled);
+            }
+        }
+
+        window.addEventListener(DEVICE_STATE_EVENT.toggle as any, enableMediaStream);
+        return () => {
+            window.removeEventListener(DEVICE_STATE_EVENT.toggle as any, enableMediaStream);
+        };
+    }, [defaultValues, form]);
 
 
 
@@ -41,16 +61,12 @@ const ConfigurationForm = ({ defaultValues }: ConfigurationFormProps) => {
 
                 saveUserPreference({
                     displayName: data.displayName,
-                    devices: {
-                        video: {
-                            deviceId: data.videoSource,
 
-                        },
-                        audio: {
-                            deviceId: data.audioSource,
+                })
 
-                        },
-                    },
+                saveUserDevice({
+                    video: { deviceId: data.videoSource, enabled: data.videoEnabled },
+                    audio: { deviceId: data.audioSource, enabled: data.audioEnabled },
                 })
 
                 router.push(`/room/${params.id}`);
