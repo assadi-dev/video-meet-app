@@ -10,10 +10,12 @@ const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_URL ?? "ws://localhost:7880"
 const buildParticipantStream = (participant: Participant): ParticipantStream => {
     const videoTrack = participant.getTrackPublication(Track.Source.Camera)?.track;
     const audioTrack = participant.getTrackPublication(Track.Source.Microphone)?.track;
+    const screenShareTrack = participant.getTrackPublication(Track.Source.ScreenShare)?.track;
 
     const stream = new MediaStream();
     if (videoTrack?.mediaStreamTrack) stream.addTrack(videoTrack.mediaStreamTrack);
     if (audioTrack?.mediaStreamTrack) stream.addTrack(audioTrack.mediaStreamTrack);
+    if (screenShareTrack?.mediaStreamTrack) stream.addTrack(screenShareTrack.mediaStreamTrack);
 
     return {
         id: participant.sid,
@@ -65,6 +67,8 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
                     selectedDevices.audio?.enabled !== false,
                     selectedDevices.audio?.deviceId ? { deviceId: selectedDevices.audio.deviceId } : undefined
                 );
+
+
 
                 setIsConnected(true);
                 syncParticipants();
