@@ -39,7 +39,7 @@ const RoomGridContainer = ({ room, localParticipant, participants, isConnecting,
 
     const handleScreenShare = async (enabled: boolean) => {
         await room.localParticipant.setScreenShareEnabled(enabled);
-        //setIsScreenSharing(enabled);
+        setIsScreenSharing(enabled);
     };
 
     if (isConnecting) {

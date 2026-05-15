@@ -10,12 +10,10 @@ const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_URL ?? "ws://localhost:7880"
 const buildParticipantStream = (participant: Participant): ParticipantStream => {
     const videoTrack = participant.getTrackPublication(Track.Source.Camera)?.track;
     const audioTrack = participant.getTrackPublication(Track.Source.Microphone)?.track;
-    const screenShareTrack = participant.getTrackPublication(Track.Source.ScreenShare)?.track;
 
     const stream = new MediaStream();
     if (videoTrack?.mediaStreamTrack) stream.addTrack(videoTrack.mediaStreamTrack);
     if (audioTrack?.mediaStreamTrack) stream.addTrack(audioTrack.mediaStreamTrack);
-    if (screenShareTrack?.mediaStreamTrack) stream.addTrack(screenShareTrack.mediaStreamTrack);
 
     return {
         id: participant.sid,
@@ -23,6 +21,18 @@ const buildParticipantStream = (participant: Participant): ParticipantStream => 
         mediaStream: stream.getTracks().length > 0 ? stream : null,
         isVideoEnabled: participant.isCameraEnabled,
         isAudioEnabled: participant.isMicrophoneEnabled,
+    };
+};
+
+const buildScreenShareStream = (participant: Participant): ParticipantStream | null => {
+    const screenTrack = participant.getTrackPublication(Track.Source.ScreenShare)?.track;
+    if (!screenTrack?.mediaStreamTrack) return null;
+    return {
+        id: `${participant.sid}-screen`,
+        name: `${participant.identity} (écran)`,
+        mediaStream: new MediaStream([screenTrack.mediaStreamTrack]),
+        isVideoEnabled: true,
+        isAudioEnabled: false,
     };
 };
 
@@ -43,9 +53,18 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
     const syncParticipants = () => {
         const lk = room.current;
         setLocalParticipant(buildParticipantStream(lk.localParticipant));
-        setParticipants(
-            Array.from(lk.remoteParticipants.values()).map((p) => buildParticipantStream(p))
-        );
+
+        const remoteStreams: ParticipantStream[] = [];
+        lk.remoteParticipants.forEach((p) => {
+            remoteStreams.push(buildParticipantStream(p));
+            const screen = buildScreenShareStream(p);
+            if (screen) remoteStreams.push(screen);
+        });
+
+        const localScreen = buildScreenShareStream(lk.localParticipant);
+        if (localScreen) remoteStreams.unshift(localScreen);
+
+        setParticipants(remoteStreams);
     };
 
     useEffect(() => {
@@ -86,6 +105,7 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
         lk.on(RoomEvent.TrackMuted, syncParticipants);
         lk.on(RoomEvent.TrackUnmuted, syncParticipants);
         lk.on(RoomEvent.LocalTrackPublished, syncParticipants);
+        lk.on(RoomEvent.LocalTrackUnpublished, syncParticipants);
         lk.on(RoomEvent.Disconnected, () => {
             setIsConnected(false);
             setLocalParticipant(null);
