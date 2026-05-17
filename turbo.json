@@ -5,9 +5,11 @@
     ".env"
   ],
   "globalEnv": [
+    "HTTP_PORT",
     "LIVEKIT_URL",
     "LIVEKIT_API_KEY",
-    "LIVEKIT_API_SECRET"
+    "LIVEKIT_API_SECRET",
+    "SERVER_IP"
   ],
   "tasks": {
     "build": {
