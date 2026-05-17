@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# apps/web — Client WebRTC LiveKit
 
-## Getting Started
+Interface de visioconférence Next.js avec Turbopack, connectée à un serveur LiveKit via l'API Express du monorepo.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16.2** (App Router, Turbopack)
+- **React 19**
+- **TypeScript 5.9**
+- **Tailwind CSS 4** + **shadcn/ui** (Radix UI)
+- **LiveKit Client 2.19** — WebRTC streaming
+- **Zustand 5** — gestion d'état
+- **React Hook Form 7** + **Zod 4** — formulaires et validation
+
+## Structure
+
+```
+apps/web/
+└── app/
+    ├── home/               # Page d'accueil — créer ou rejoindre une room
+    ├── waiting-room/[id]/  # Salle d'attente — sélection des périphériques
+    ├── room/[id]/          # Salle de visioconférence
+    ├── components/         # Composants réutilisables (UI, formulaires)
+    ├── hooks/              # useLivekitClient, useMediaDevices, useNavigation
+    ├── store/              # Zustand stores (préférences utilisateur, périphériques)
+    └── lib/                # Utilitaires (API, formatage, générateurs)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Variables d'environnement
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Créer un fichier `.env.local` à la racine de `apps/web` :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5500
+NEXT_PUBLIC_LIVEKIT_URL=ws://localhost:7880
+```
 
-## Learn More
+## Développement
 
-To learn more about Next.js, take a look at the following resources:
+Depuis la racine du monorepo :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ou uniquement cette app :
 
-## Deploy on Vercel
+```sh
+npx turbo dev --filter=web
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+L'app tourne sur **https://localhost:3000** (HTTPS activé par défaut pour les APIs WebRTC).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Build de production
+
+```sh
+npx turbo build --filter=web
+```
+
+## Pages et routing
+
+| Route | Description |
+|-------|-------------|
+| `/home` | Formulaire de création / rejoindre une room |
+| `/waiting-room/[id]` | Prévisualisation caméra/micro et sélection des périphériques |
+| `/room/[id]` | Salle de conférence avec grille de participants |
+
+## Hooks principaux
+
+- **`useLivekitClient`** — gère la connexion Room LiveKit, les flux des participants et l'état des périphériques
+- **`useMediaDevices`** — énumère et bascule les caméras / micros disponibles
+- **`useNavigation`** — gestion de la navigation entre les pages
+
+## Alias de chemins
+
+Configurés dans `tsconfig.json` :
+
+```
+@/*           → app/*
+@components/* → app/components/*
+@hooks/*      → app/hooks/*
+@store/*      → app/store/*
+@lib/*        → app/lib/*
+```

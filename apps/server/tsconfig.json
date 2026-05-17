@@ -4,8 +4,7 @@
     "module": "nodenext",
     "types": [
       "node",
-      "express",
-      "jest"
+      "express"
     ],
     "lib": [
       "es2022",
@@ -51,7 +50,6 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "jest.config.ts",
     "src/**/*.test.ts"
   ],
   "include": [
