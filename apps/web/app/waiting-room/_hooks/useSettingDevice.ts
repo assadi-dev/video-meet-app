@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useReducer, useRef } from "react";
-import { DEVICE_STATE_EVENT, DeviceStateEvent, DeviceStateEventPayload, DeviceStateReducer } from "../type";
+import { DEVICE_STATE_EVENT, DeviceReadyPayload, DeviceStateEvent, DeviceStateEventPayload, DeviceStateReducer } from "../type";
 import { useDevicesStore } from "@/store/useDevicesStore";
 
 
@@ -81,7 +81,12 @@ const useSettingMediaDevice = () => {
                     }
                 });
                 dispatch({ type: "INIT_DEVICES", payload });
-                console.log("mediaStream initialized!");
+
+                const readyPayload: DeviceReadyPayload = {
+                    videoDeviceId: payload.video?.id ?? null,
+                    audioDeviceId: payload.audio?.id ?? null,
+                };
+                window.dispatchEvent(new CustomEvent(DEVICE_STATE_EVENT.ready, { detail: readyPayload }));
 
             } catch (error) {
                 console.error("Error accessing media devices.", error);

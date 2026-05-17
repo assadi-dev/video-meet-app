@@ -103,7 +103,7 @@ const FormFieldComboBox = <T extends FieldValues>({
                         value={option.label}
                         key={option.value}
                         onSelect={() => {
-                          form.setValue(name, option.value);
+                          field.onChange(option.value);
                           callback && callback(option);
                           setOpen(false);
                         }}

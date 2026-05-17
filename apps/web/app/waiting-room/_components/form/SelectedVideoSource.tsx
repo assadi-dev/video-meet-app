@@ -18,7 +18,6 @@ const SelectedVideoSource = () => {
   }));
 
   const onSelected = (value: Record<string, any>) => {
-    form.setValue("videoSource", value.value);
     emit(DEVICE_STATE_EVENT.select, value.value, "videoinput");
   }
 

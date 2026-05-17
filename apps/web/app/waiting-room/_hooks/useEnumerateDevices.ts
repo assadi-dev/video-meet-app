@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { DeviceStateEvent, DeviceStateEventPayload } from "../type";
+import { DEVICE_STATE_EVENT, DeviceStateEvent, DeviceStateEventPayload } from "../type";
 
 export const useEnumerateDevices = () => {
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -22,9 +22,11 @@ export const useEnumerateDevices = () => {
         enumerateDevices();
 
         navigator.mediaDevices.addEventListener('devicechange', enumerateDevices);
+        window.addEventListener(DEVICE_STATE_EVENT.ready as any, enumerateDevices);
 
         return () => {
             navigator.mediaDevices.removeEventListener("devicechange", enumerateDevices);
+            window.removeEventListener(DEVICE_STATE_EVENT.ready as any, enumerateDevices);
         };
     }, []);
 
