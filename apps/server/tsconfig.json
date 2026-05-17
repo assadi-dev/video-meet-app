@@ -3,8 +3,7 @@
     "target": "ES2022",
     "module": "nodenext",
     "types": [
-      "node",
-      "express"
+      "node"
     ],
     "lib": [
       "es2022",
