@@ -216,17 +216,17 @@ const useMediaDevices = () => {
       let deviceIdVideo: string = selectedVideoDevice.id;
 
       if (devices) {
-        if (userDeviceVideo.deviceId) {
+        if (deviceIdVideo) {
           const findDeviceVideo = devices
             .filter((d) => d.kind === "videoinput")
-            .find((d) => d.deviceId === userDeviceVideo.deviceId);
+            .find((d) => d.deviceId === deviceIdVideo);
           if (findDeviceVideo) deviceIdVideo = findDeviceVideo.deviceId;
         }
 
-        if (userDeviceAudio.deviceId) {
+        if (deviceIdAudio) {
           const findDeviceAudio = devices
             .filter((d) => d.kind === "audioinput")
-            .find((d) => d.deviceId === userDeviceAudio.deviceId);
+            .find((d) => d.deviceId === deviceIdAudio);
           if (findDeviceAudio) deviceIdAudio = findDeviceAudio.deviceId;
         }
         changeUserDevice({ deviceIdVideo, deviceIdAudio });

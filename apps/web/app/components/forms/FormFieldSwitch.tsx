@@ -8,9 +8,11 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { Switch } from "../../../components/ui/switch";
+
 import { cn } from "@/lib/utils";
-import { InputProps } from "../ui/inputPassword";
+import { InputProps } from "@/types/form";
+import { Switch } from "../ui/switch";
+
 
 type FormFieldSwitchProps<T extends FieldValues> = InputProps & {
   control: Control<T>;

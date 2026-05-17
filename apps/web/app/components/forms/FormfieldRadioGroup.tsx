@@ -1,10 +1,10 @@
 import React from "react";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "@components/ui/label";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { FormControl, FormField } from "../../../components/ui/form";
+import { FormControl, FormField } from "@components/ui/form";
 import { RadioGroupProps } from "@radix-ui/react-radio-group";
-import { generate_slug } from "@/lib/utils";
+import { generateSlug } from "@/lib/generator";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 type SelectOptionsType = {
   label: string;
@@ -43,7 +43,7 @@ const FormFieldRadioGroup = <T extends FieldValues>({
           defaultValue={field.value}
         >
           {options.map((v) => {
-            const labelKey = generate_slug(v.label);
+            const labelKey = generateSlug(v.label);
             return (
               <FormControl key={v.value}>
                 <div className="flex items-center space-x-2">

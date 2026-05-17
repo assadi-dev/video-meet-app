@@ -45,7 +45,7 @@ const useInitLocalMedia = () => {
                     kind: "videoinput",
                     track: null,
                     enabled: selectedDevices.video?.enabled
-                }
+                } as any
             }
             if (selectedDevices.audio) {
                 const audioDevices = devices.filter((device) => device.kind === "audioinput");
@@ -58,9 +58,9 @@ const useInitLocalMedia = () => {
                     kind: "audioinput",
                     track: null,
                     enabled: selectedDevices.audio?.enabled
-                }
+                } as any
             }
-            setDevices(deviceInit);
+            setDevices(deviceInit as any);
         };
         initDevices();
 
