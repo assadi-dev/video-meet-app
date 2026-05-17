@@ -64,6 +64,53 @@ LIVEKIT_API_KEY=<votre-api-key>
 LIVEKIT_API_SECRET=<votre-api-secret>
 ```
 
+## Serveur LiveKit (Docker)
+
+LiveKit est le serveur SFU WebRTC requis. Deux façons de le lancer localement.
+
+### Mode développement (rapide)
+
+Clés prégénérées (`devkey` / `secret`), aucune configuration requise :
+
+```sh
+docker run --rm \
+  -p 7880:7880 \
+  -p 7881:7881/tcp \
+  -p 7882:7882/udp \
+  livekit/livekit-server \
+  --dev
+```
+
+Utiliser ces valeurs dans `apps/server/.env` :
+
+```env
+LIVEKIT_URL=http://localhost:7880
+LIVEKIT_API_KEY=devkey
+LIVEKIT_API_SECRET=secret
+```
+
+### Mode production (clés personnalisées)
+
+```sh
+docker run --rm \
+  -p 7880:7880 \
+  -p 7881:7881/tcp \
+  -p 7882:7882/udp \
+  -e LIVEKIT_KEYS="<api-key>: <api-secret>" \
+  livekit/livekit-server \
+  --node-ip=<IP-publique-du-serveur>
+```
+
+### Ports utilisés
+
+| Port | Protocole | Usage |
+|------|-----------|-------|
+| 7880 | TCP | API HTTP / WebSocket (signaling) |
+| 7881 | TCP | WebRTC sur TCP (fallback) |
+| 7882 | UDP | WebRTC média (flux vidéo/audio) |
+
+> Le port UDP 7882 est indispensable pour les flux média. S'assurer qu'il est ouvert dans le pare-feu sur un serveur distant.
+
 ## Développement
 
 Lancer tous les services simultanément :
