@@ -6,6 +6,9 @@
   "author": "Assadi",
   "type": "commonjs",
   "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "npx tsc && npx tsc-alias",
     "dev": "nodemon",
