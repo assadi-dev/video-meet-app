@@ -17,6 +17,10 @@ const RoomClient = ({ roomId }: RoomClientProps) => {
     const [token, setToken] = useState<string | null>(null);
     const [hydrated, setHydrated] = useState(false);
     const { router } = useRouterNavigation();
+    const { room, localParticipant, participants, isConnecting, isScreenSharing, error } = useLivekitClient({
+        roomName: roomId,
+        token,
+    });
 
     useEffect(() => {
         setHydrated(true);
@@ -40,11 +44,6 @@ const RoomClient = ({ roomId }: RoomClientProps) => {
             </div>
         );
     }
-
-    const { room, localParticipant, participants, isConnecting, isScreenSharing, error } = useLivekitClient({
-        roomName: roomId,
-        token,
-    });
 
     return (
         <RoomGridContainer
