@@ -143,7 +143,7 @@ const useSettingMediaDevice = () => {
                         track.stop();
                     });
                     const newStream = await navigator.mediaDevices.getUserMedia({
-                        video: { deviceId: { exact: deviceId } },
+                        video: { deviceId: { ideal: deviceId } },
                     });
                     dispatch({ type: "SET_VIDEO", payload: { video: { id: deviceId, stream: newStream } } });
 
@@ -155,7 +155,7 @@ const useSettingMediaDevice = () => {
                         track.stop();
                     });
                     const newStreamAudio = await navigator.mediaDevices.getUserMedia({
-                        audio: { deviceId: { exact: deviceId } },
+                        audio: { deviceId: { ideal: deviceId } },
                     });
                     dispatch({ type: "SET_AUDIO", payload: { audio: { ...state.audio, id: deviceId, stream: newStreamAudio } } });
                     break;

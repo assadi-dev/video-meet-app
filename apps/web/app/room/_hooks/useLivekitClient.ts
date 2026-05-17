@@ -42,7 +42,10 @@ type UseLivekitClientOptions = {
 };
 
 const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
-    const room = useRef<Room>(new Room());
+    const room = useRef<Room>(new Room({
+        adaptiveStream: true,
+        dynacast: true,
+    }));
     const selectedDevices = useDevicesStore((state) => state);
     const [localParticipant, setLocalParticipant] = useState<ParticipantStream | null>(null);
     const [participants, setParticipants] = useState<ParticipantStream[]>([]);
@@ -79,14 +82,25 @@ const useLivekitClient = ({ token }: UseLivekitClientOptions) => {
             try {
                 await lk.connect(LIVEKIT_URL, token);
 
-                await lk.localParticipant.setCameraEnabled(
-                    selectedDevices.video?.enabled !== false,
-                    selectedDevices.video?.deviceId ? { deviceId: selectedDevices.video.deviceId } : undefined
-                );
-                await lk.localParticipant.setMicrophoneEnabled(
-                    selectedDevices.audio?.enabled !== false,
-                    selectedDevices.audio?.deviceId ? { deviceId: selectedDevices.audio.deviceId } : undefined
-                );
+                const cameraEnabled = selectedDevices.video?.enabled !== false;
+                try {
+                    await lk.localParticipant.setCameraEnabled(
+                        cameraEnabled,
+                        selectedDevices.video?.deviceId ? { deviceId: selectedDevices.video.deviceId } : undefined
+                    );
+                } catch {
+                    await lk.localParticipant.setCameraEnabled(cameraEnabled);
+                }
+
+                const micEnabled = selectedDevices.audio?.enabled !== false;
+                try {
+                    await lk.localParticipant.setMicrophoneEnabled(
+                        micEnabled,
+                        selectedDevices.audio?.deviceId ? { deviceId: selectedDevices.audio.deviceId } : undefined
+                    );
+                } catch {
+                    await lk.localParticipant.setMicrophoneEnabled(micEnabled);
+                }
 
 
 
