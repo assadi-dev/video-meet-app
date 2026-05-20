@@ -6,6 +6,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 export const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
+        console.log("allowedOrigins", allowedOrigins);
         console.log("origin", origin);
         // En dev, autoriser les requêtes sans origin (Postman, server-to-server)
         if (!origin && !isProd) return callback(null, true);
@@ -17,3 +18,4 @@ export const corsOptions: CorsOptions = {
     credentials: true,
     maxAge: 86400,
 };
+
