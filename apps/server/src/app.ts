@@ -6,6 +6,7 @@ import { ENV } from "@config/env";
 import { registerDependencies } from "./injection/di";
 import http from "http";
 import livekitRouter from "./features/livekit/livekit.router";
+import { corsOptions } from "@config/cors";
 
 const app = express();
 app.use(express.json());
@@ -13,9 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = ENV.HTTP_PORT ?? 5500;
 
 app.use(morgan("dev"));
-app.use(cors({
-  origin: "*",
-}));
+app.use(cors(corsOptions));
 
 app.use("/api", livekitRouter);
 

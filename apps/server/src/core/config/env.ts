@@ -7,6 +7,7 @@ const env_schema = z.object({
   LIVEKIT_URL: z.string().url(),
   LIVEKIT_API_KEY: z.string().min(1),
   LIVEKIT_API_SECRET: z.string().min(1),
+  CORS_ORIGIN: z.string().min(1).default("http://localhost:3000"),
 });
 
 const result = env_schema.safeParse(process.env);
