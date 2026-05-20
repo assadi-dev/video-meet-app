@@ -13,7 +13,9 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = ENV.HTTP_PORT ?? 5500;
 
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+  origin: "*",
+}));
 
 app.use("/api", livekitRouter);
 
