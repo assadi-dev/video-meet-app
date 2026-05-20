@@ -5,7 +5,6 @@
     ".env"
   ],
   "globalEnv": [
-    "HTTP_PORT",
     "LIVEKIT_URL",
     "LIVEKIT_API_KEY",
     "LIVEKIT_API_SECRET",
@@ -27,7 +26,8 @@
       ],
       "env": [
         "NEXT_PUBLIC_API_URL",
-        "NEXT_PUBLIC_LIVEKIT_URL"
+        "NEXT_PUBLIC_LIVEKIT_URL",
+        "HTTP_PORT"
       ]
     },
     "lint": {
